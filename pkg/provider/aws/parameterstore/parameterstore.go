@@ -24,6 +24,7 @@ import (
 	"github.com/tidwall/gjson"
 	ctrl "sigs.k8s.io/controller-runtime"
 
+	"github.com/external-secrets/external-secrets/apis/externalsecrets/v1beta1"
 	esv1beta1 "github.com/external-secrets/external-secrets/apis/externalsecrets/v1beta1"
 	"github.com/external-secrets/external-secrets/pkg/provider/aws/util"
 )
@@ -63,6 +64,9 @@ func (pm *ParameterStore) GetSecret(ctx context.Context, ref esv1beta1.ExternalS
 		Name:           &ref.Key,
 		WithDecryption: aws.Bool(true),
 	})
+	if _, ok := err.(*ssm.ParameterNotFound); ok {
+		return nil, v1beta1.DeleteSecretErr
+	}
 	if err != nil {
 		return nil, util.SanitizeErr(err)
 	}

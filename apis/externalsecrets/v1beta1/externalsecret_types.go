@@ -48,13 +48,13 @@ const (
 type ExternalSecretDeletionPolicy string
 
 const (
-	// Owner creates the Secret and sets .metadata.ownerReferences to the ExternalSecret resource.
-	DeletionOwner ExternalSecretDeletionPolicy = "Owner"
+	// Delete deletes the secret if all provider secrets are deleted
+	DeletionDelete ExternalSecretDeletionPolicy = "Delete"
 
-	// Merge does not create the Secret, but merges the data fields to the Secret.
+	// Merge removes keys in the secret, but not the secret itself
 	DeletionMerge ExternalSecretDeletionPolicy = "Merge"
 
-	// None does not create a Secret (future use with injector).
+	// None will retain the secret if it all provider secrets have been deleted
 	DeletionNone ExternalSecretDeletionPolicy = "None"
 )
 
